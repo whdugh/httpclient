@@ -1,70 +1,71 @@
 
-#include <errno.h>
-#include "downloadService.h"
+#include "DownloadService.h"
 
-DownloadService::DownloadService()
+
+DownloadService::DownloadService(DownloadTaskRepository& theReposity) :
+	myRepository(theReposity),
+	myNumberOfThreads(32)
 {
-
 }
 
 DownloadService::~DownloadService()
 {
-
 }
 
-size_t DownloadService::write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
+bool DownloadService::start()
 {
-	size_t written = fwrite(ptr, size, nmemb, stream);
-	return written;
-}
-
-
-int DownloadService::downloadFile(const char* url, char * filename)
-{
-	CURL *curl_handle;
-	FILE *fp = nullptr;
-	fp = fopen(filename, "wb");
-	if (fp == nullptr)
+	myThreadList.reserve(myNumberOfThreads);
+	for (auto i = 0; i < myNumberOfThreads;++i)
 	{
-		perror("open fail");
-		return -1;
+		myThreadList.emplace_back(std::thread(std::bind(&DownloadService::runDownload, this)));
 	}
+}
 
-
-	CURLcode perform_ret;
-
-	//init curl session
-	curl_handle = curl_easy_init();
-	if (curl_handle)
+bool DownloadService::stop()
+{
+	for (auto& thread:myThreadList)
 	{
-		//set opt
-		curl_easy_setopt(curl_handle, CURLOPT_URL, url);
-
-		curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, write_data);
-
-		curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, fp);
-
-		//provide a buffer to store erros
-		char errbuf[CURL_ERROR_SIZE];
-		curl_easy_setopt(curl_handle, CURLOPT_ERRORBUFFER, errbuf);
-		errbuf[0] = 0;
-
-		//finish transport
-		perform_ret = curl_easy_perform(curl);
-		long aHTTPResCode = 0;
-		CURLcode res = curl_easy_getinfo(curl_handle, CURLINFO_HTTP_CODE, &aHTTPResCode);
-		if (perform_ret == CURLE_OK && aHTTPResCode != 200)
+		if (thread.joinable())
 		{
-			std::cout << __FUNCTION__ << ",login http failed! ret=" << perform_ret
-				<< ",aHTTPResCode=" << aHTTPResCode << std::endl;
-			curl_easy_cleanup(curl);
-			fclose(fp);
-
-			return -1;
-		}		
+			thread.join();
+		}
 	}
+	myDownloadTaskList.clear();
 
-	curl_easy_cleanup(curl);
-	fclose(fp);
-	return 0;
+}
+void DownloadService::scheduleDownloadTask(std::shared_ptr<DownloadTask> task)
+{
+	std::lock_guard<std::mutex> guard(myLockTaskList);
+	myDownloadTaskList.emplace_back(task);
+
+	if (!myDownloadTaskList.empty())
+		myCondition.notify_one();
+}
+
+std::shared_ptr<DownloadTask> DownloadService::getDownloadTask()
+{
+	std::unique_lock<std::mutex> guard(myLockTaskList);
+	myCondition.wait(guard, [this](){
+		return !myDownloadTaskList.empty();
+	});
+
+	std::shared_ptr<DownloadTask> task = *myDownloadTaskList.begin();
+	myDownloadTaskList.pop_front();
+	return task;
+}
+
+void DownloadService::runDownload()
+{
+	for (;;)
+	{
+		std::shared_ptr<DownloadTask> task = getDownloadTask();
+		if (!task) break;
+
+		download(*task.get());
+	}
+}
+
+void DownloadService::download(DownloadTask &task)
+{
+
 }
