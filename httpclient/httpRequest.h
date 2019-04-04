@@ -2,9 +2,9 @@
 #define _HTTP_REQUEST_H_
 
 #include <string>
-#include "BaseRequest.h"
+#include "Message.h"
 
-class httpRequest:public BaseRequest 
+class httpRequest :public Message
 {
 public:
 

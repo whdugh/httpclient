@@ -15,12 +15,33 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="downloadService.h">
+    <ClInclude Include="..\httpClient.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\httpRequest.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\task.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Message.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DownloadService.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="downloadservice.cpp">
+    <ClCompile Include="..\httpClient.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\httpRequest.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DownloadService.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

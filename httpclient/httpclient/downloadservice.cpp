@@ -1,6 +1,6 @@
 
 #include "DownloadService.h"
-
+#include "httpClient.h"
 
 DownloadService::DownloadService(DownloadTaskRepository& theReposity) :
 	myRepository(theReposity),
@@ -67,5 +67,12 @@ void DownloadService::runDownload()
 
 void DownloadService::download(DownloadTask &task)
 {
+	if (task.protocol == "FTP")
+	{
 
+	}
+	else if (task.protocol == "HTTP")
+	{
+
+	}
 }
