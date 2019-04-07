@@ -158,14 +158,15 @@ int httpClient::get(const std::string& url, std::string& filename, bool secure)
 	if (curl == nullptr) return CURLE_FAILED_INIT;
 
 	//set opt
-	curl_easy_setopt(curl, CURLOPT_URL, url);
+	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+	//curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, std::bind(&httpClient::write_data,this));
 	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
 	curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
 
 	if (myisDebug)
 	{
 		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-		curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_trace);
+		//curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, my_trace);
 		//curl_easy_setopt(curl, CURLOPT_DEBUGDATA, t);
 	}
 
@@ -176,19 +177,19 @@ int httpClient::get(const std::string& url, std::string& filename, bool secure)
 	}
 	else
 	{
-		curl_easy_setopt(hnd, CURLOPT_SSLVERSION, 3);//fix for ssl verson
+		curl_easy_setopt(curl, CURLOPT_SSLVERSION, 3);//fix for ssl verson
 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, false);
 	}
 
 	//provide a buffer to store erros
 	char errbuf[CURL_ERROR_SIZE];
-	curl_easy_setopt(curl_handle, CURLOPT_ERRORBUFFER, errbuf);
+	curl_easy_setopt(curl, CURLOPT_ERRORBUFFER, errbuf);
 	errbuf[0] = 0;
 
 	//finish transport
 	perform_ret = curl_easy_perform(curl);
 	long aHTTPResCode = 0;
-	CURLcode res = curl_easy_getinfo(curl_handle, CURLINFO_HTTP_CODE, &aHTTPResCode);
+	CURLcode res = curl_easy_getinfo(curl, CURLINFO_HTTP_CODE, &aHTTPResCode);
 	if (perform_ret == CURLE_OK && aHTTPResCode != 200)
 	{
 		std::cout << __FUNCTION__ << ",login http failed! ret=" << perform_ret

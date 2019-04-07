@@ -10,6 +10,10 @@
 #include <thread>
 #include <condition_variable>
 
+#include "httpClient.h"
+#include "Message.h"
+#include "Factory.h"
+
 using namespace std;
 
 //#include "task.h"
@@ -22,11 +26,13 @@ class DownloadTask
 {
 public:
 	int id;
-	std::string host;
+	std::string destHost;
 	std::string protocol;
-	unsigned short port;
+	unsigned short destPort;
 	std::string user;
 	std::string password;
+	std::string filename;
+	std::string url;
 };
 
 class DownloadTaskRepository

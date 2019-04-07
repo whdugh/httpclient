@@ -5,8 +5,11 @@
 */
 
 #include <iostream>
+
+#include "downloadService.h"
 #include "httpClient.h"
-#include "task.h"
+
+//#include "task.h"
 
 using namespace std;
 

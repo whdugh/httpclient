@@ -1,6 +1,6 @@
 
-#include "DownloadService.h"
-#include "httpClient.h"
+#include "downloadService.h"
+
 
 DownloadService::DownloadService(DownloadTaskRepository& theReposity) :
 	myRepository(theReposity),
@@ -67,12 +67,7 @@ void DownloadService::runDownload()
 
 void DownloadService::download(DownloadTask &task)
 {
-	if (task.protocol == "FTP")
-	{
-
-	}
-	else if (task.protocol == "HTTP")
-	{
-
-	}
+	Factory aFactory;
+	Message* message = aFactory.create(task.protocol);
+	message->get(task.url,task.filename);
 }

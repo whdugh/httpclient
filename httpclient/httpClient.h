@@ -5,8 +5,9 @@
 #include <string>
 #include <functional>
 #include <thread>
-
+#include <iostream>
 #include <curl/curl.h>
+#include "Message.h"
 
 using namespace std;
 
@@ -18,7 +19,7 @@ struct transfer {
 	FILE *out;
 };
 
-class httpClient
+class httpClient:public Message
 {
 public:
 	httpClient();
@@ -36,7 +37,7 @@ public:
 	void SetIsDebug(bool isDebug){ myisDebug = isDebug; }
 
 	//callback
-	size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
+	size_t static write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
 
 	
 	//url:输入参数,请求的url(http://www.badidu.com)
