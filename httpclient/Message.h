@@ -19,11 +19,4 @@ private:
 
 };
 
-Message::Message()
-{
-}
-
-Message::~Message()
-{
-}
 #endif

@@ -12,7 +12,7 @@
 
 #include "httpClient.h"
 #include "Message.h"
-#include "Factory.h"
+//#include "Factory.h"
 
 using namespace std;
 
