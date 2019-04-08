@@ -19,6 +19,8 @@ bool DownloadService::start()
 	{
 		myThreadList.emplace_back(std::thread(std::bind(&DownloadService::runDownload, this)));
 	}
+	
+	myScheduleThread = std::thread(std::bind(&DownloadService::runDownload,));
 }
 
 bool DownloadService::stop()

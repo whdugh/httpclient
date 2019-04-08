@@ -67,7 +67,8 @@ private:
 
 private:
 	DownloadTaskRepository &myRepository;
-
+	std::thread myScheduleThread;
+	
 	unsigned int myNumberOfThreads;
 	std::mutex myLockTaskList; //for downtasklist
 	std::condition_variable myCondition;
