@@ -137,7 +137,7 @@ httpClient::~httpClient()
 //	curl_easy_setopt(hnd, CURLOPT_SSL_VERIFYPEER, 0);
 //}
 
-size_t httpClient::write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
+size_t static write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
 {
 	size_t written = fwrite(ptr, size, nmemb, stream);
 	return written;

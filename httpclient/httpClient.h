@@ -28,8 +28,7 @@ public:
 	//登录
 	//bool loginHttpServer();
 	//for debug
-	static void dump(const char *text, int num, unsigned char *ptr, size_t size,
-		char nohex);
+	static void dump(const char *text, int num, unsigned char *ptr, size_t size,char nohex);
 
 	void setOpt(struct transfer *t, int num);
 
@@ -37,7 +36,7 @@ public:
 	void SetIsDebug(bool isDebug){ myisDebug = isDebug; }
 
 	//callback
-	size_t static write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
+	//size_t static write_data(void *ptr, size_t size, size_t nmemb, FILE *stream);
 
 	
 	//url:输入参数,请求的url(http://www.badidu.com)

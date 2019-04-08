@@ -1,5 +1,5 @@
 #include "Factory.h"
-
+#include "httpClient.h"
 
 Message* Factory::create(std::string& protocolType)
 {
