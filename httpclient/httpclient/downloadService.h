@@ -60,6 +60,7 @@ public:
 private:
 	void scheduleDownloadTask(std::shared_ptr<DownloadTask> task);
 	void runDownload();
+	void runSchedule();
 
 	void download(DownloadTask &task);
 

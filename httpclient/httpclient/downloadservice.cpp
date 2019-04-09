@@ -20,7 +20,7 @@ bool DownloadService::start()
 		myThreadList.emplace_back(std::thread(std::bind(&DownloadService::runDownload, this)));
 	}
 	
-	myScheduleThread = std::thread(std::bind(&DownloadService::runDownload,));
+	myScheduleThread = std::thread(std::bind(&DownloadService::runSchedule,));
 }
 
 bool DownloadService::stop()
@@ -32,9 +32,37 @@ bool DownloadService::stop()
 			thread.join();
 		}
 	}
+	
+	if (myScheduleThread.joinable())
+	{
+		myScheduleThread.join();
+	}
 	myDownloadTaskList.clear();
 
 }
+
+void DownloadService::runSchedule()
+{
+	for(;;)
+	{
+		std::list< std::shared_ptr<DownloadTask> > taskList;
+		
+		myRepository.getTaskList(taskList);
+		
+		for(auto task:taskList)
+		{
+			try
+			{
+				scheduleDownloadTask(task);
+			}
+			catch(...)
+			{
+				std::cout<< "schedule download task " << task->id << " failure" << std::endl;
+			}
+		}
+	}
+}
+
 void DownloadService::scheduleDownloadTask(std::shared_ptr<DownloadTask> task)
 {
 	std::lock_guard<std::mutex> guard(myLockTaskList);
