@@ -147,6 +147,7 @@ int httpClient::get(const std::string& url, std::string& filename, bool secure)
 {
 	FILE *fp = nullptr;
 	fp = fopen(filename.c_str(), "wb");
+	cout <<__FUNCTION__<<","<<url<<endl;
 	if (fp == nullptr)
 	{
 		perror("open fail");

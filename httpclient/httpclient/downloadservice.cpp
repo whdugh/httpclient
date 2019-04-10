@@ -20,7 +20,7 @@ bool DownloadService::start()
 		myThreadList.emplace_back(std::thread(std::bind(&DownloadService::runDownload, this)));
 	}
 	
-	myScheduleThread = std::thread(std::bind(&DownloadService::runSchedule,));
+	myScheduleThread = std::thread(std::bind(&DownloadService::runSchedule,this));
 }
 
 bool DownloadService::stop()
@@ -65,6 +65,7 @@ void DownloadService::runSchedule()
 
 void DownloadService::scheduleDownloadTask(std::shared_ptr<DownloadTask> task)
 {
+	//cout <<__LINE__<<","<<__FUNCTION__<<",enter"<<endl;
 	std::lock_guard<std::mutex> guard(myLockTaskList);
 	myDownloadTaskList.emplace_back(task);
 
@@ -74,6 +75,7 @@ void DownloadService::scheduleDownloadTask(std::shared_ptr<DownloadTask> task)
 
 std::shared_ptr<DownloadTask> DownloadService::getDownloadTask()
 {
+	//cout <<__LINE__<<","<<__FUNCTION__<<",enter"<<endl;
 	std::unique_lock<std::mutex> guard(myLockTaskList);
 	myCondition.wait(guard, [this](){
 		return !myDownloadTaskList.empty();
@@ -86,6 +88,7 @@ std::shared_ptr<DownloadTask> DownloadService::getDownloadTask()
 
 void DownloadService::runDownload()
 {
+	//cout <<__LINE__<<","<<__FUNCTION__<<",enter"<<endl;
 	for (;;)
 	{
 		std::shared_ptr<DownloadTask> task = getDownloadTask();

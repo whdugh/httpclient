@@ -48,6 +48,7 @@ public:
 class DownloadService
 {
 public:
+	//DownloadService();
 	DownloadService(DownloadTaskRepository& theReposity);
 	virtual ~DownloadService();
 
