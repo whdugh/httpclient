@@ -39,10 +39,10 @@ class DownloadTaskRepository
 {
 public:
 	//for extend
-	//virtual void getTaskList(std::list<std::shared_ptr<DownloadTask>> & theTaskList) = 0;
+	virtual void getTaskList(std::list<std::shared_ptr<DownloadTask>> & theTaskList) = 0;
 	
-	void getTaskList(std::list<std::shared_ptr<DownloadTask>> & theTaskList);
-
+	//void getTaskList(std::list<std::shared_ptr<DownloadTask>> & theTaskList);
+	
 };
 
 class DownloadService
