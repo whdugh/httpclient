@@ -43,7 +43,7 @@ bool DownloadService::stop()
 
 void DownloadService::runSchedule()
 {
-	for(;;)
+	//for(;;)
 	{
 		std::list< std::shared_ptr<DownloadTask> > taskList;
 		
@@ -102,5 +102,7 @@ void DownloadService::download(DownloadTask &task)
 {
 	Factory aFactory;
 	Message* message = aFactory.create(task.protocol);
-	message->get(task.url,task.filename);
+	bool bFinished = message->get(task.url,task.filename);
+	if(!bFinished)
+	cout<<__FUNCTION__<<",file = "<<task.filename << "down finished."<<endl;
 }
