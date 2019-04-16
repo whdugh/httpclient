@@ -3,7 +3,8 @@
 #include "httpClient.h"
 
 httpClient::httpClient() :
-			myisDebug(false)
+			myisDebug(false),
+			myDownloadFileLenth(-1)
 {
 
 }
@@ -145,8 +146,13 @@ size_t static write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
 
 int httpClient::get(const std::string& url, std::string& filename, bool secure)
 {
-	FILE *fp = nullptr;
-	fp = fopen(filename.c_str(), "wb");
+	long fileLength = getRemoteFileSize(url);
+	if(fileLength < 0)
+	{
+		perror("get file length error.....");
+		return -1;
+	}
+	FILE *fp = fopen(filename.c_str(), "wb");
 	//cout <<__FUNCTION__<<","<<url<<endl;
 	if (fp == nullptr)
 	{
@@ -204,5 +210,20 @@ int httpClient::get(const std::string& url, std::string& filename, bool secure)
 	curl_easy_cleanup(curl);
 	fclose(fp);
 	return 0;
+}
+
+long getRemoteFileSize (const std::string& url)
+{
+	CURL *handle = curl_easy_init ();
+	curl_easy_setopt (handle, CURLOPT_URL, url);
+	curl_easy_setopt (handle, CURLOPT_HEADER, 1);
+	curl_easy_setopt (handle, CURLOPT_NOBODY, 1);
+	if (curl_easy_perform (handle) == CURLE_OK)
+	{
+		curl_easy_getinfo (handle, CURLINFO_CONTENT_LENGTH_DOWNLOAD, &myDownloadFileLenth);
+	}
+	
+	curl_easy_cleanup(curl);
+	return myDownloadFileLenth;
 }
 

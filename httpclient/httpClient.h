@@ -7,6 +7,7 @@
 #include <thread>
 #include <iostream>
 #include <curl/curl.h>
+#include <memory>
 #include "Message.h"
 
 using namespace std;
@@ -46,10 +47,14 @@ public:
 
 	int post(const std::string& url, const std::string& data, std::string& reponsedata, bool secure = false);
 
+	//get remote file size
+	long getRemoteFileSize(const std::string& url);
+
 private:
 	//struct transfer myTransfers[NUM_HANDLES];
 	bool myisDebug;
-
+	struct transfer *myTransfer;
+	long myDownloadFileLenth;
 };
 
 #endif
